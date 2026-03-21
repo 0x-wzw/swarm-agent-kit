@@ -108,6 +108,74 @@ ASK: Validate viability of [approach]. What could go wrong?
 REPORT_TO: October
 ```
 
+## Skill Authoring Guidelines
+
+**These apply to every skill we build from now on — not just this repo.**
+
+Every skill must meet the transferable, scalable standard before it ships. No exceptions.
+
+### The 4 Requirements
+
+| Requirement | What It Means |
+|-------------|---------------|
+| **Self-contained** | Everything the skill needs lives in its directory — SKILL.md, scripts, references. No hidden deps. |
+| **Complete SKILL.md** | Valid AgentSkills spec: `name`, `description`, body. Prerequisites, config, usage examples. Under 200 lines. No TODOs, no stubs. |
+| **One-command installable** | `cp -r skills/my-skill ~/.openclaw/skills/` just works. Any prerequisites documented in SKILL.md. |
+| **ClawHub-ready** | Follows AgentSkills spec. Passes `scripts/validate.sh`. No breaking changes to existing tools. |
+
+### SKILL.md Checklist
+
+Before shipping any skill, verify:
+- [ ] `name:` field present and kebab-case
+- [ ] `description:` field present and one line (verb + what + when)
+- [ ] Body has: Prerequisites → Configuration → Usage → Examples
+- [ ] Under 200 lines
+- [ ] No TODO, FIXME, or stub content
+- [ ] Scripts in `scripts/` are executable (`chmod +x`)
+- [ ] Passes `bash scripts/validate.sh`
+
+### Skill Directory Structure
+
+```
+skill-name/
+├── SKILL.md              # Required: name + description + body
+├── scripts/              # Optional: CLI helpers (executable)
+│   └── skill-name.sh
+├── references/           # Optional: API docs, templates
+│   └── api.md
+└── _meta.json           # Optional: version, author, tags
+```
+
+### Publishing Flow
+
+```bash
+# 1. Validate locally
+bash scripts/validate.sh
+
+# 2. Publish to ClawHub
+clawhub publish skills/my-new-skill
+
+# 3. Tag release (for significant versions)
+git tag -a v1.0 -m "my-new-skill v1.0"
+git push origin main --tags
+```
+
+### Anti-Patterns
+
+❌ Building a skill without a complete SKILL.md  
+❌ Including TODOs or placeholder content  
+❌ Missing Prerequisites or Configuration sections  
+❌ Non-executable scripts  
+❌ Publishing without running validate.sh  
+
+### Where This Applies
+
+This standard applies to:
+- New skills authored by any agent in the swarm
+- Existing skills being improved or extended
+- Skills imported from external sources (must be audited first)
+- Experimental skills (they still need a valid SKILL.md, even if incomplete)
+
 ## File Locations
 
 | What | Where |
